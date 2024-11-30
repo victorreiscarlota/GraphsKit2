@@ -1,0 +1,21 @@
+Grafo: t
+Direcionado: Sim
+Vértices: 4
+Arestas: 1
+
+Lista de Adjacência:
+1: 2(1)
+2: 
+3: 
+4: 
+
+Matriz de Adjacência:
+     1   2   3   4
+  1   0   1   0   0
+  2   0   0   0   0
+  3   0   0   0   0
+  4   0   0   0   0
+
+Matriz de Incidência:
+     1
+  1   1  -1   0   0
