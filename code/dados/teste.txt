@@ -1,0 +1,23 @@
+Grafo: teste
+Direcionado: Não
+Vértices: 5
+Arestas: 1
+
+Lista de Adjacência:
+1: 2 (a)
+2: 1 (a)
+3: 
+4: 
+5: 
+
+Matriz de Adjacência:
+     1   2   3   4   5
+  1   0   1   0   0   0
+  2   1   0   0   0   0
+  3   0   0   0   0   0
+  4   0   0   0   0   0
+  5   0   0   0   0   0
+
+Matriz de Incidência:
+     1
+  1   1   1   0   0   0
