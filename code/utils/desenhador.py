@@ -1,6 +1,8 @@
+import math
+
 class Desenhador:
     @staticmethod
-    def desenhar_linha(imagem, x1, y1, x2, y2, cor):
+    def desenhar_linha_basica(imagem, x1, y1, x2, y2, cor):
         x1 = int(x1)
         y1 = int(y1)
         x2 = int(x2)
@@ -8,14 +10,8 @@ class Desenhador:
         dx = abs(x2 - x1)
         dy = abs(y2 - y1)
         x, y = x1, y1
-        if x2 > x1:
-            sx = 1
-        else:
-            sx = -1
-        if y2 > y1:
-            sy = 1
-        else:
-            sy = -1
+        sx = 1 if x2 > x1 else -1
+        sy = 1 if y2 > y1 else -1
         if dx > dy:
             err = dx // 2
             while x != x2:
@@ -36,9 +32,26 @@ class Desenhador:
                     x += sx
                     err += dy
                 y += sy
-
         if 0 <= x2 < len(imagem[0]) and 0 <= y2 < len(imagem):
             imagem[y2][x2] = cor
+
+    @staticmethod
+    def desenhar_seta(imagem, x1, y1, x2, y2, cor):
+        Desenhador.desenhar_linha_basica(imagem, x1, y1, x2, y2, cor)
+        Desenhador.desenhar_cabeca_seta(imagem, x1, y1, x2, y2, cor)
+
+    @staticmethod
+    def desenhar_cabeca_seta(imagem, x1, y1, x2, y2, cor):
+        angulo = math.atan2(y2 - y1, x2 - x1)
+        tamanho_seta = 10
+        angulo1 = angulo + math.pi / 6
+        angulo2 = angulo - math.pi / 6
+        x3 = int(x2 - tamanho_seta * math.cos(angulo1))
+        y3 = int(y2 - tamanho_seta * math.sin(angulo1))
+        x4 = int(x2 - tamanho_seta * math.cos(angulo2))
+        y4 = int(y2 - tamanho_seta * math.sin(angulo2))
+        Desenhador.desenhar_linha_basica(imagem, x2, y2, x3, y3, cor)
+        Desenhador.desenhar_linha_basica(imagem, x2, y2, x4, y4, cor)
 
     @staticmethod
     def desenhar_circulo(imagem, x0, y0, raio, cor):
