@@ -1,0 +1,21 @@
+Grafo: Grafo_3
+Direcionado: Sim
+Vértices: 3
+Arestas: 3
+
+Lista de Adjacência:
+1: 2(1)
+2: 3(1)
+3: 1(1)
+
+Matriz de Adjacência:
+     1   2   3
+  1   0   1   0
+  2   0   0   1
+  3   1   0   0
+
+Matriz de Incidência:
+     1   2   3
+  1   0   0   0
+  2   1  -1   0
+  3  -1   0   1
