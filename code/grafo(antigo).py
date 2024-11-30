@@ -1,3 +1,5 @@
+# grafo.py
+
 from models.lista_adjacencia import ListaAdjacencia
 from models.matriz_adjacencia import MatrizAdjacencia
 from models.matriz_incidencia import MatrizIncidencia
@@ -39,10 +41,12 @@ class Grafo:
         self.vertex_labels[v] = label if label else f"V{v + 1}"
 
     def adicionar_aresta(self, u, v, peso=1, label=None):
-        self.lista_adj.adicionar_aresta(u, v, peso, label)
-        self.matriz_adj.adicionar_aresta(u, v, peso)
-        self.matriz_inc.adicionar_aresta(u, v, peso, label)
-        self.edge_list.append({'u': u, 'v': v, 'peso': peso, 'label': label})
+        if not self.lista_adj.checar_adjacencia(u, v):
+            self.lista_adj.adicionar_aresta(u, v, peso, label)
+            self.matriz_adj.adicionar_aresta(u, v, peso)
+            self.matriz_inc.adicionar_aresta(u, v, peso, label)
+            self.edge_list.append({'u': u, 'v': v, 'peso': peso, 'label': label})
+            # Mensagem removida para evitar duplicação
 
     def remover_aresta(self, u, v):
         self.lista_adj.remover_aresta(u, v)
@@ -56,6 +60,7 @@ class Grafo:
             if not self.dirigido and edge['u'] == v and edge['v'] == u:
                 del self.edge_list[i]
                 break
+        print(f"Aresta ({u + 1}, {v + 1}) removida!")
 
     def checar_adjacencia_vertices(self, u, v):
         return (self.lista_adj.checar_adjacencia(u, v) and
@@ -84,7 +89,7 @@ class Grafo:
     def identificar_pontes_naive(self):
         pontes = []
         for u in range(self.num_vertices):
-            for v, _ in list(self.lista_adj.adjacencias[u]):
+            for v, _, _ in list(self.lista_adj.adjacencias[u]):
                 if (u < v) or self.dirigido:
                     self.remover_aresta(u, v)
                     if not self.grafo_conexo():
@@ -114,7 +119,7 @@ class Grafo:
         while stack:
             v, children = stack[-1]
             try:
-                w, _ = next(children)
+                w, _, _ = next(children)
                 if not visited[w]:
                     parent[w] = v
                     visited[w] = True
@@ -149,14 +154,13 @@ class Grafo:
         visited[u] = True
         num[u] = low[u] = self.tempo
         self.tempo += 1
-        articulation_found = False
 
         while stack:
             v, children_iter, is_return = stack[-1]
             if not is_return:
                 stack[-1] = (v, children_iter, True)
                 try:
-                    w, _ = next(children_iter)
+                    w, _, _ = next(children_iter)
                     if not visited[w]:
                         parent[w] = v
                         children += 1
@@ -175,8 +179,6 @@ class Grafo:
                     else:
                         if children > 1:
                             articulacoes.add(v)
-            else:
-                stack.pop()
 
     def grafo_conexo(self):
         if self.num_vertices == 0:
@@ -186,7 +188,7 @@ class Grafo:
         visitados[0] = True
         while stack:
             v = stack.pop()
-            for w, _ in self.lista_adj.adjacencias[v]:
+            for w, _, _ in self.lista_adj.adjacencias[v]:
                 if not visitados[w]:
                     visitados[w] = True
                     stack.append(w)
@@ -198,7 +200,7 @@ class Grafo:
 
         def dfs_fill_order(v):
             visited[v] = True
-            for w, _ in self.lista_adj.adjacencias[v]:
+            for w, _, _ in self.lista_adj.adjacencias[v]:
                 if not visited[w]:
                     dfs_fill_order(w)
             stack.append(v)
@@ -209,8 +211,8 @@ class Grafo:
 
         transposto = {i: [] for i in range(self.num_vertices)}
         for u in self.lista_adj.adjacencias:
-            for v, peso in self.lista_adj.adjacencias[u]:
-                transposto[v].append((u, peso))
+            for v, peso, label in self.lista_adj.adjacencias[u]:
+                transposto[v].append((u, peso, label))
 
         visited = [False] * self.num_vertices
         scc_list = []
@@ -218,7 +220,7 @@ class Grafo:
         def dfs_transpose(v, component):
             visited[v] = True
             component.append(v)
-            for w, _ in transposto[v]:
+            for w, _, _ in transposto[v]:
                 if not visited[w]:
                     dfs_transpose(w, component)
 
@@ -245,7 +247,7 @@ class Grafo:
         visitados[0] = True
         while stack:
             v = stack.pop()
-            for w, _ in self.lista_adj.adjacencias[v]:
+            for w, _, _ in self.lista_adj.adjacencias[v]:
                 if not visitados[w]:
                     visitados[w] = True
                     stack.append(w)
@@ -264,7 +266,7 @@ class Grafo:
             visitados[i] = True
             while stack:
                 v = stack.pop()
-                for w, _ in self.lista_adj.adjacencias[v]:
+                for w, _, _ in self.lista_adj.adjacencias[v]:
                     if not visitados[w]:
                         visitados[w] = True
                         stack.append(w)
@@ -292,7 +294,7 @@ class Grafo:
         while grafo_copia.contar_vertices_arestas()[1] > 0:
             if not grafo_copia.lista_adj.adjacencias[atual]:
                 break
-            for vizinho, _ in list(grafo_copia.lista_adj.adjacencias[atual]):
+            for vizinho, _, _ in list(grafo_copia.lista_adj.adjacencias[atual]):
                 grafo_copia.remover_aresta(atual, vizinho)
                 if not grafo_copia.grafo_conexo():
                     grafo_copia.adicionar_aresta(atual, vizinho)
@@ -321,8 +323,9 @@ class Grafo:
         print("Lista de Adjacência:")
         for vertice, adj in self.lista_adj.adjacencias.items():
             vertice_exibicao = vertice + 1
-            adj_exibicao = [(v + 1, peso) for v, peso in adj]
-            print(f"{vertice_exibicao}: {adj_exibicao}")
+            # Exibir o par de vértices conectados no formato 'u v'
+            adj_exibicao = ", ".join([f"{vertice_exibicao} {v + 1}" for v, _, _ in adj])
+            print(f"{vertice_exibicao}: [{adj_exibicao}]")
 
     def exibir_matriz_adjacencia(self):
         print("Matriz de Adjacência:")
@@ -334,11 +337,14 @@ class Grafo:
 
     def exibir_matriz_incidencia(self):
         print("Matriz de Incidência:")
-        header = "   " + " ".join([f"{i+1:3}" for i in range(len(self.edge_list))])
-        print(header)
-        for i, row in enumerate(self.matriz_inc.inc_matrix):
-            linha = f"{i+1:3} " + " ".join([f"{val:3}" for val in row])
-            print(linha)
+        if self.edge_list:
+            header = "   " + " ".join([f"{i+1:3}" for i in range(len(self.edge_list))])
+            print(header)
+            for i, row in enumerate(self.matriz_inc.inc_matrix):
+                linha = f"{i+1:3} " + " ".join([f"{val:3}" for val in row])
+                print(linha)
+        else:
+            print("Sem arestas.\n")
 
     def exibir_representacoes(self):
         self.exibir_lista_adjacencia()
