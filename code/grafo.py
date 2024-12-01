@@ -92,6 +92,77 @@ class Grafo:
                     if not self.dirigido:
                         self.lista_adj.adjacencias[v].append((u, peso))
         return pontes
+    
+    def identificar_pontes_naive_novo(self):
+        pontes = []
+        N = 100000
+        gr1 = {}; gr2 = {};
+        vist1 = [0] * N; vist2 = [0] * N;
+
+        for edge in self.edge_list:
+            self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+
+        for edge in self.edge_list:
+            self.remove_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+
+            if self.is_connected(4, vist1, vist2, gr1, gr2) == False:
+                pontes.append((edge['u'], edge['v']))
+
+            self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+        
+        return pontes
+    
+    def remove_edge(self, u, v, gr1, gr2):
+        if u not in gr1 or v not in gr2:
+            return
+        
+        gr1[u].remove(v)
+        gr2[v].remove(u)
+    
+    def add_edge(self, u, v, gr1, gr2):
+        if u not in gr1:
+            gr1[u] = [];
+            
+        if v not in gr2:
+            gr2[v] = [];
+            
+        gr1[u].append(v);
+        gr2[v].append(u); 
+    
+    def dfs1(self, x, gr1): 
+        vis1[x] = True;
+        if x not in gr1:
+            gr1[x] = {};
+            
+        for i in gr1[x]:
+            if (not vis1[i]):
+                self.dfs1(i, gr1) 
+    
+    def dfs2(self, x, gr2): 
+        vis2[x] = True; 
+    
+        if x not in gr2:
+            gr2[x] = {};
+            
+        for i in gr2[x]: 
+            if (not vis2[i]):
+                self.dfs2(i, gr2); 
+    
+    def is_connected(self, n, vist1, vist2, gr1, gr2): 
+        global vis1;
+        global vis2;
+        
+        vis1 = [False] * len(vist1);
+        self.dfs1(1, gr1);
+        
+        vis2 = [False] * len(vist2);
+        self.dfs2(1, gr2);
+        
+        for i in range(1, n + 1) :
+            if (not vis1[i] and not vis2[i]) :
+                return False;
+                
+        return True;
 
     def identificar_pontes_tarjan(self):
         num = [0] * self.num_vertices
