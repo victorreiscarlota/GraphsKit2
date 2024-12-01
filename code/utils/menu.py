@@ -23,7 +23,8 @@ class SubMenuOption(Enum):
     IDENTIFY_ARTICULATIONS = 9
     EXPORT_GRAPH = 10
     EXPORT_PPM = 11
-    BACK = 12
+    NEW_NAIVE_BRIDGES = 12
+    BACK = 13
 
 
 class Menu:
@@ -113,6 +114,7 @@ class Menu:
             SubMenuOption.IDENTIFY_ARTICULATIONS: Menu.identify_articulations,
             SubMenuOption.EXPORT_GRAPH: Menu.export_graph,
             SubMenuOption.EXPORT_PPM: Menu.export_ppm,
+            SubMenuOption.NEW_NAIVE_BRIDGES: Menu.new_naive_bridges,
             SubMenuOption.BACK: Menu.back_to_main_menu
         }
 
@@ -247,6 +249,12 @@ class Menu:
             return
         grafo.exportar(nome_ppm[:-4], ["ppm"])
         print(f"Grafo exportado como {nome_ppm}.")
+
+    @staticmethod
+    def new_naive_bridges(grafo):
+        pontes_naive = grafo.identificar_pontes_naive_novo()
+        pontes_naive_exib = [(u + 1, v + 1) for u, v in pontes_naive]
+        print("Pontes (Naive):", pontes_naive_exib)
 
     @staticmethod
     def back_to_main_menu(grafo):
