@@ -1,15 +1,13 @@
 from grafo import Grafo
 from utils.gerar_grafos import GeradorGrafos
-# from tests.teste_desempenho import teste_desempenho
+from tests.teste_desempenho import teste_desempenho
 from enum import Enum
-
 
 class MainMenuOption(Enum):
     ANALYZE_GRAPHS = 1
     CREATE_GRAPH = 2
     PERFORMANCE_TEST = 3
     EXIT = 4
-
 
 class SubMenuOption(Enum):
     ADD_EDGE = 1
@@ -144,8 +142,7 @@ class Menu:
 
     @staticmethod
     def performance_test():
-        # Chama a função de teste de desempenho
-        teste_desempenho()  # Uncomment this line when 'teste_desempenho' is available
+        teste_desempenho()
 
     @staticmethod
     def exit_program():

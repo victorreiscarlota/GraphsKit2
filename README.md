@@ -2,7 +2,7 @@
 
 > Trabalho prático da disciplina Teoria dos Grafos e Computabilidade, PUC Minas, 2024.
 
-GraphsKit é uma biblioteca em Python desenvolvida para facilitar a criação, manipulação e visualização de grafos. Ela foi implementada sem o uso de bibliotecas externas e oferece funcionalidades como:
+GraphsKit é uma biblioteca em Python desenvolvida para a criação, manipulação e visualização de grafos. Ela foi implementada sem o uso de bibliotecas externas e oferece funcionalidades como:
 
 - **Criação de grafos** dirigidos e não dirigidos.
 - **Adição e remoção de vértices e arestas**.
