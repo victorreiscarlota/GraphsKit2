@@ -31,7 +31,7 @@
 - Dentro do diretório
 
 ```bash
-python main.py
+python main.py ou python3 main.py
 ```
 
 - Para poder importar a nossa biblioteca
