@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.3draft" xmlns:viz="http://www.gephi.org/gexf/viz/0.1" version="1.3">
+  <graph mode="static" defaultedgetype="directed">
+    <nodes>
+      <node id="0" label="V1">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="1" label="V2">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="2" label="V3">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="3" label="V4">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="4" label="V5">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="5" label="V6">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="6" label="V7">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="7" label="V8">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="8" label="V9">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="9" label="V10">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="10" label="V11">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="11" label="V12">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="12" label="V13">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="13" label="V14">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="14" label="V15">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+      <node id="15" label="V16">
+        <viz:position x="0" y="0" z="0" />
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="5" target="0" weight="1" label="" />
+      <edge id="1" source="0" target="6" weight="1" label="" />
+      <edge id="2" source="0" target="7" weight="1" label="" />
+      <edge id="3" source="0" target="11" weight="1" label="" />
+      <edge id="4" source="0" target="13" weight="1" label="" />
+      <edge id="5" source="1" target="2" weight="1" label="" />
+      <edge id="6" source="1" target="4" weight="1" label="" />
+      <edge id="7" source="1" target="5" weight="1" label="" />
+      <edge id="8" source="6" target="1" weight="1" label="" />
+      <edge id="9" source="7" target="1" weight="1" label="" />
+      <edge id="10" source="1" target="12" weight="1" label="" />
+      <edge id="11" source="3" target="2" weight="1" label="" />
+      <edge id="12" source="2" target="8" weight="1" label="" />
+      <edge id="13" source="11" target="2" weight="1" label="" />
+      <edge id="14" source="2" target="14" weight="1" label="" />
+      <edge id="15" source="2" target="15" weight="1" label="" />
+      <edge id="16" source="9" target="3" weight="1" label="" />
+      <edge id="17" source="6" target="4" weight="1" label="" />
+      <edge id="18" source="4" target="9" weight="1" label="" />
+      <edge id="19" source="10" target="4" weight="1" label="" />
+      <edge id="20" source="4" target="12" weight="1" label="" />
+      <edge id="21" source="13" target="4" weight="1" label="" />
+      <edge id="22" source="4" target="15" weight="1" label="" />
+      <edge id="23" source="5" target="6" weight="1" label="" />
+      <edge id="24" source="5" target="12" weight="1" label="" />
+      <edge id="25" source="6" target="8" weight="1" label="" />
+      <edge id="26" source="6" target="9" weight="1" label="" />
+      <edge id="27" source="6" target="10" weight="1" label="" />
+      <edge id="28" source="6" target="13" weight="1" label="" />
+      <edge id="29" source="10" target="7" weight="1" label="" />
+      <edge id="30" source="11" target="7" weight="1" label="" />
+      <edge id="31" source="14" target="7" weight="1" label="" />
+      <edge id="32" source="8" target="13" weight="1" label="" />
+      <edge id="33" source="8" target="14" weight="1" label="" />
+      <edge id="34" source="10" target="9" weight="1" label="" />
+      <edge id="35" source="9" target="15" weight="1" label="" />
+      <edge id="36" source="13" target="15" weight="1" label="" />
+    </edges>
+  </graph>
+</gexf>

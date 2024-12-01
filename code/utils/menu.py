@@ -1,7 +1,7 @@
 
 from grafo import Grafo
 from utils.gerar_grafos import GeradorGrafos
-from tests.teste_desempenho import teste_desempenho
+#from tests.teste_desempenho import teste_desempenho
 
 class Menu:
     @staticmethod
@@ -39,7 +39,8 @@ class Menu:
                     grafo.exportar_para_gexf(f"{grafo.nome.replace(' ', '_')}.gexf")
                     grafo.exportar_para_ppm(f"{grafo.nome.replace(' ', '_')}.ppm")
                     grafo.exportar_para_txt(f"{grafo.nome.replace(' ', '_')}.txt")
-                    print(f"Grafo '{grafo.nome}' exportado para os formatos GEXF, PPM e TXT no diretório 'dados'.")
+                    grafo.exportar_para_graphml(f"{grafo.nome.replace(' ', '_')}.graphml")
+                    print(f"Grafo '{grafo.nome}' exportado para os formatos GRAPHML, GEXF, PPM e TXT no diretório 'dados'.")
             elif opcao == 2:
                 try:
                     num_vertices = int(input("Digite o número de vértices: "))
@@ -140,6 +141,7 @@ class Menu:
                         grafo.exportar_para_gexf(f"{nome}.gexf")
                         grafo.exportar_para_ppm(f"{nome}.ppm")
                         grafo.exportar_para_txt(f"{nome}.txt")
+                        grafo.exportar_para_graphml(f"{grafo.nome.replace(' ', '_')}.graphml")
                         print("Exportação concluída.")
                     elif escolha == 11:
                         nome_ppm = input("Digite o nome do arquivo PPM (com extensão .ppm): ").strip()
@@ -152,6 +154,7 @@ class Menu:
                         grafo.exportar_para_gexf(f"{export_nome}.gexf")
                         grafo.exportar_para_ppm(f"{export_nome}.ppm")
                         grafo.exportar_para_txt(f"{export_nome}.txt")
+                        grafo.exportar_para_graphml(f"{grafo.nome.replace(' ', '_')}.graphml")
                         print(f"Grafo '{grafo.nome}' exportado automaticamente após a criação.")
                         break
                     else:

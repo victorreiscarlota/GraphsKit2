@@ -4,6 +4,7 @@ from models.matriz_incidencia import MatrizIncidencia
 from utils.gexf_exporter import GEXFExporter
 from utils.ppm_exporter import PPMExporter
 from utils.txt_exporter import TXTExporter
+from utils.graphml_exporter import GraphMLExporter
 from utils.desenhador import Desenhador
 import os
 
@@ -327,6 +328,9 @@ class Grafo:
 
     def exportar_para_txt(self, nome_arquivo="grafo.txt"):
         TXTExporter.exportar(self, nome_arquivo)
+    
+    def exportar_para_graphml(self, nome_arquivo="grafo.graphml"):
+        GraphMLExporter.exportar(self, nome_arquivo)
 
     def exibir_lista_adjacencia(self):
         print("Lista de Adjacência:")
