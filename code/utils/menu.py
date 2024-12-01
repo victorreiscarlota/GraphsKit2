@@ -3,13 +3,11 @@ from utils.gerar_grafos import GeradorGrafos
 from tests.teste_desempenho import teste_desempenho
 from enum import Enum
 
-
 class MainMenuOption(Enum):
     ANALISAR_GRAFOS = 1
     CRIAR_GRAFO = 2
     TESTE_DESEMPENHO = 3
     SAIR = 4
-
 
 class SubMenuOption(Enum):
     ADICIONAR_ARESTA = 1
@@ -21,11 +19,15 @@ class SubMenuOption(Enum):
     VERIFICAR_CONECTIVIDADE = 7
     IDENTIFICAR_PONTES = 8
     IDENTIFICAR_ARTICULACOES = 9
-    EXPORTAR_GRAFO = 10
-    EXPORTAR_PPM = 11
-    NOVO_METODO_PONTES = 12
-    VOLTAR = 13
-
+    EXIBIR_VERTICES = 10
+    DEFINIR_ROTULO_VERTICE = 11
+    DEFINIR_PESO_VERTICE = 12
+    ADICIONAR_VERTICE = 13
+    REMOVER_VERTICE = 14
+    EXPORTAR_GRAFO = 15
+    EXPORTAR_PPM = 16
+    NOVO_METODO_PONTES = 17
+    VOLTAR = 18
 
 class Menu:
     @staticmethod
@@ -80,8 +82,7 @@ class Menu:
                 print("Semi-fortemente Conexo:", grafo.grafo_semi_fortemente_conexo())
             else:
                 print("Conexo:", grafo.grafo_conexo())
-            grafo.exportar(f"{grafo.nome.replace(' ', '_')}")
-            print(f"Grafo '{grafo.nome}' exportado para os formatos GRAPHML, PPM e TXT no diretório 'dados'.")
+            grafo.exportar_completo(f"{grafo.nome.replace(' ', '_')}")
 
     @staticmethod
     def criar_grafo():
@@ -100,6 +101,17 @@ class Menu:
 
         grafo = Grafo(num_vertices, dirigido, nome=nome_grafo)
 
+        for v in range(num_vertices):
+            rotulo = input(f"Digite o rótulo para o vértice {v + 1} (ou pressione Enter para '{grafo.vertex_labels[v]}'): ").strip()
+            if rotulo:
+                grafo.definir_rotulo_vertice(v, rotulo)
+            try:
+                peso_input = input(f"Digite o peso para o vértice {v + 1} (ou pressione Enter para 1): ").strip()
+                peso = int(peso_input) if peso_input else 1
+                grafo.definir_peso_vertice(v, peso)
+            except ValueError:
+                print("Entrada inválida para peso. Usando peso padrão 1.")
+
         sub_menu_actions = {
             SubMenuOption.ADICIONAR_ARESTA: Menu.adicionar_aresta,
             SubMenuOption.REMOVER_ARESTA: Menu.remover_aresta,
@@ -110,6 +122,11 @@ class Menu:
             SubMenuOption.VERIFICAR_CONECTIVIDADE: Menu.verificar_conectividade,
             SubMenuOption.IDENTIFICAR_PONTES: Menu.identificar_pontes,
             SubMenuOption.IDENTIFICAR_ARTICULACOES: Menu.identificar_articulacoes,
+            SubMenuOption.EXIBIR_VERTICES: Menu.exibir_vertices,
+            SubMenuOption.DEFINIR_ROTULO_VERTICE: Menu.definir_rotulo_vertice,
+            SubMenuOption.DEFINIR_PESO_VERTICE: Menu.definir_peso_vertice,
+            SubMenuOption.ADICIONAR_VERTICE: Menu.adicionar_vertice,
+            SubMenuOption.REMOVER_VERTICE: Menu.remover_vertice,
             SubMenuOption.EXPORTAR_GRAFO: Menu.exportar_grafo,
             SubMenuOption.EXPORTAR_PPM: Menu.exportar_ppm,
             SubMenuOption.NOVO_METODO_PONTES: Menu.novo_metodo_pontes,
@@ -126,8 +143,7 @@ class Menu:
                     result = action(grafo)
                     if result == 'voltar':
                         export_nome = grafo.nome.replace(" ", "_")
-                        grafo.exportar(export_nome)
-                        print(f"Grafo '{grafo.nome}' exportado automaticamente após a criação.")
+                        grafo.exportar_completo(export_nome)
                         break
                 else:
                     print("Opção inválida, tente novamente.")
@@ -148,10 +164,15 @@ class Menu:
         print("7. Verificar Conectividade")
         print("8. Identificar Pontes")
         print("9. Identificar Articulações")
-        print("10. Exportar Grafo")
-        print("11. Exportar Grafo como PPM")
-        print("12. Identificar Pontes (Método Alternativo)")
-        print("13. Voltar ao Menu Principal")
+        print("10. Exibir Vértices")
+        print("11. Definir Rótulo de Vértice")
+        print("12. Definir Peso de Vértice")
+        print("13. Adicionar Vértice")
+        print("14. Remover Vértice")
+        print("15. Exportar Grafo")
+        print("16. Exportar Grafo como PPM")
+        print("17. Identificar Pontes (Método Alternativo)")
+        print("18. Voltar ao Menu Principal")
 
     @staticmethod
     def teste_desempenho():
@@ -174,7 +195,7 @@ class Menu:
             peso = int(peso_input) if peso_input else 1
             label = input("Digite o rótulo da aresta (opcional): ")
             grafo.adicionar_aresta(u, v, peso, label)
-            print(f"Aresta ({u + 1}, {v + 1}) adicionada!")
+            print(f"Aresta ({grafo.vertex_labels[u]}, {grafo.vertex_labels[v]}) adicionada!")
         except ValueError:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
@@ -187,7 +208,7 @@ class Menu:
                 print(f"Erro: Vértices válidos estão entre 1 e {grafo.num_vertices}.")
                 return
             grafo.remover_aresta(u, v)
-            print(f"Aresta ({u + 1}, {v + 1}) removida!")
+            print(f"Aresta ({grafo.vertex_labels[u]}, {grafo.vertex_labels[v]}) removida!")
         except ValueError:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
@@ -200,9 +221,9 @@ class Menu:
                 print(f"Erro: Vértices válidos estão entre 1 e {grafo.num_vertices}.")
                 return
             if grafo.checar_adjacencia_vertices(u, v):
-                print(f"Aresta ({u + 1}, {v + 1}) existe!")
+                print(f"Aresta ({grafo.vertex_labels[u]}, {grafo.vertex_labels[v]}) existe!")
             else:
-                print(f"Aresta ({u + 1}, {v + 1}) não existe.")
+                print(f"Aresta ({grafo.vertex_labels[u]}, {grafo.vertex_labels[v]}) não existe.")
         except ValueError:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
@@ -242,12 +263,73 @@ class Menu:
         print("Articulações:", articulacoes)
 
     @staticmethod
+    def exibir_vertices(grafo):
+        grafo.exibir_vertices()
+
+    @staticmethod
+    def definir_rotulo_vertice(grafo):
+        try:
+            v = int(input(f"Digite o número do vértice para definir o rótulo (1 a {grafo.num_vertices}): ")) - 1
+            if v < 0 or v >= grafo.num_vertices:
+                print(f"Erro: Vértice inválido. Deve estar entre 1 e {grafo.num_vertices}.")
+                return
+            novo_rotulo = input(f"Digite o novo rótulo para o vértice {v + 1}: ").strip()
+            if not novo_rotulo:
+                print("Rótulo não pode ser vazio.")
+                return
+            grafo.definir_rotulo_vertice(v, novo_rotulo)
+        except ValueError:
+            print("Entrada inválida. Por favor, digite um número inteiro.")
+
+    @staticmethod
+    def definir_peso_vertice(grafo):
+        try:
+            v = int(input(f"Digite o número do vértice para definir o peso (1 a {grafo.num_vertices}): ")) - 1
+            if v < 0 or v >= grafo.num_vertices:
+                print(f"Erro: Vértice inválido. Deve estar entre 1 e {grafo.num_vertices}.")
+                return
+            novo_peso = int(input(f"Digite o novo peso para o vértice {v + 1}: "))
+            grafo.definir_peso_vertice(v, novo_peso)
+        except ValueError:
+            print("Entrada inválida. Por favor, digite números inteiros.")
+
+    @staticmethod
+    def adicionar_vertice(grafo):
+        try:
+            label = input("Digite o rótulo para o novo vértice (ou pressione Enter para o padrão): ").strip()
+            peso_input = input("Digite o peso para o novo vértice (padrão 1): ").strip()
+            peso = int(peso_input) if peso_input else 1
+            grafo.adicionar_vertice(label=label if label else None, peso=peso)
+        except ValueError:
+            print("Entrada inválida para peso. Por favor, digite um número inteiro.")
+
+    @staticmethod
+    def remover_vertice(grafo):
+        try:
+            v = int(input(f"Digite o número do vértice para remover (1 a {grafo.num_vertices}): ")) - 1
+            if v < 0 or v >= grafo.num_vertices:
+                print(f"Erro: Vértice inválido. Deve estar entre 1 e {grafo.num_vertices}.")
+                return
+            confirm = input(f"Tem certeza que deseja remover o vértice {v + 1}? (s/n): ").lower()
+            if confirm == 's':
+                grafo.remover_vertice(v)
+            else:
+                print("Remoção cancelada.")
+        except ValueError:
+            print("Entrada inválida. Por favor, digite um número inteiro.")
+
+    @staticmethod
     def exportar_grafo(grafo):
         nome = input("Digite o nome base dos arquivos (sem extensão): ").strip()
         if not nome:
             nome = grafo.nome.replace(" ", "_")
-        grafo.exportar(nome)
-        print("Exportação concluída.")
+        formatos_input = input("Digite os formatos para exportar separados por vírgula (graphml, ppm, txt) [default: graphml, ppm, txt]: ").strip()
+        formatos = [f.strip().lower() for f in formatos_input.split(',')] if formatos_input else ["graphml", "ppm", "txt"]
+        try:
+            grafo.exportar(nome_base=nome, formatos=formatos)
+            print("Exportação concluída.")
+        except ValueError as e:
+            print(e)
 
     @staticmethod
     def exportar_ppm(grafo):
@@ -255,7 +337,7 @@ class Menu:
         if not nome_ppm.endswith('.ppm'):
             print("Erro: O nome do arquivo deve terminar com '.ppm'.")
             return
-        grafo.exportar(nome_ppm[:-4], ["ppm"])
+        grafo.exportar(nome_base=nome_ppm[:-4], formatos=["ppm"])
         print(f"Grafo exportado como {nome_ppm}.")
 
     @staticmethod

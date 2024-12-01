@@ -1,0 +1,15 @@
+Grafo: a
+Direcionado: Não
+Vértices: 1
+Arestas: 1
+
+Lista de Adjacência:
+1: 1(1), 1(1)
+
+Matriz de Adjacência:
+     1
+  1   1
+
+Matriz de Incidência:
+     1
+  1   1
