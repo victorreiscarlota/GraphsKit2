@@ -17,11 +17,12 @@ class Grafo:
         self.matriz_inc = MatrizIncidencia(num_vertices, dirigido)
         self.edge_list = []
         self.vertex_labels = {i: f"V{i + 1}" for i in range(num_vertices)}
+        self.vertex_weights = {i: 1 for i in range(num_vertices)}
         self.tempo = 0
         self.frame_count = 0
         self.desenhador = Desenhador()
 
-    def adicionar_vertice(self, label=None):
+    def adicionar_vertice(self, label=None, peso=1):
         v = self.num_vertices
         self.lista_adj.num_vertices += 1
         self.matriz_adj.num_vertices += 1
@@ -34,6 +35,43 @@ class Grafo:
         for row in self.matriz_inc.inc_matrix:
             row.append(0)
         self.vertex_labels[v] = label if label else f"V{v + 1}"
+        self.vertex_weights[v] = peso
+
+    def remover_vertice(self, v):
+        if v < 0 or v >= self.num_vertices:
+            print(f"Erro: Vértice inválido. Deve estar entre 1 e {self.num_vertices}.")
+            return
+        arestas_para_remover = [edge for edge in self.edge_list if edge['u'] == v or edge['v'] == v]
+        for edge in arestas_para_remover:
+            self.remover_aresta(edge['u'], edge['v'])
+        del self.lista_adj.adjacencias[v]
+        self.matriz_adj.adj_matrix.pop(v)
+        for row in self.matriz_adj.adj_matrix:
+            row.pop(v)
+        self.matriz_inc.inc_matrix.pop(v)
+        for row in self.matriz_inc.inc_matrix:
+            row.pop(v)
+        del self.vertex_labels[v]
+        del self.vertex_weights[v]
+        self.num_vertices -= 1
+
+    def definir_rotulo_vertice(self, v, novo_rotulo):
+        if v < 0 or v >= self.num_vertices:
+            print(f"Erro: Vértice inválido. Deve estar entre 1 e {self.num_vertices}.")
+            return
+        self.vertex_labels[v] = novo_rotulo
+
+    def definir_peso_vertice(self, v, novo_peso):
+        if v < 0 or v >= self.num_vertices:
+            print(f"Erro: Vértice inválido. Deve estar entre 1 e {self.num_vertices}.")
+            return
+        self.vertex_weights[v] = novo_peso
+
+    def obter_rotulo_vertice(self, v):
+        return self.vertex_labels.get(v, f"V{v + 1}")
+
+    def obter_peso_vertice(self, v):
+        return self.vertex_weights.get(v, 1)
 
     def adicionar_aresta(self, u, v, peso=1, label=None):
         self.lista_adj.adicionar_aresta(u, v, peso, label)
@@ -92,77 +130,71 @@ class Grafo:
                     if not self.dirigido:
                         self.lista_adj.adjacencias[v].append((u, peso))
         return pontes
-    
+
     def identificar_pontes_naive_novo(self):
         pontes = []
-        N = 100000
-        gr1 = {}; gr2 = {};
-        vist1 = [0] * N; vist2 = [0] * N;
+        N = self.num_vertices + 1
+        gr1 = {}
+        gr2 = {}
+        vist1 = [0] * N
+        vist2 = [0] * N
 
         for edge in self.edge_list:
             self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
 
         for edge in self.edge_list:
-            self.remove_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
-
-            if self.is_connected(4, vist1, vist2, gr1, gr2) == False:
+            self.remove_edge_naive(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+            if not self.is_connected(N - 1, vist1, vist2, gr1, gr2):
                 pontes.append((edge['u'], edge['v']))
-
             self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
-        
+
         return pontes
-    
-    def remove_edge(self, u, v, gr1, gr2):
+
+    def remove_edge_naive(self, u, v, gr1, gr2):
         if u not in gr1 or v not in gr2:
             return
-        
-        gr1[u].remove(v)
-        gr2[v].remove(u)
-    
+        if v in gr1[u]:
+            gr1[u].remove(v)
+        if u in gr2[v]:
+            gr2[v].remove(u)
+
     def add_edge(self, u, v, gr1, gr2):
         if u not in gr1:
-            gr1[u] = [];
-            
+            gr1[u] = []
         if v not in gr2:
-            gr2[v] = [];
-            
-        gr1[u].append(v);
-        gr2[v].append(u); 
-    
-    def dfs1(self, x, gr1): 
-        vis1[x] = True;
+            gr2[v] = []
+        gr1[u].append(v)
+        gr2[v].append(u)
+
+    def dfs1(self, x, gr1):
+        global vis1
+        vis1[x] = True
         if x not in gr1:
-            gr1[x] = {};
-            
+            gr1[x] = {}
         for i in gr1[x]:
-            if (not vis1[i]):
-                self.dfs1(i, gr1) 
-    
-    def dfs2(self, x, gr2): 
-        vis2[x] = True; 
-    
+            if not vis1[i]:
+                self.dfs1(i, gr1)
+
+    def dfs2(self, x, gr2):
+        global vis2
+        vis2[x] = True
         if x not in gr2:
-            gr2[x] = {};
-            
-        for i in gr2[x]: 
-            if (not vis2[i]):
-                self.dfs2(i, gr2); 
-    
-    def is_connected(self, n, vist1, vist2, gr1, gr2): 
-        global vis1;
-        global vis2;
-        
-        vis1 = [False] * len(vist1);
-        self.dfs1(1, gr1);
-        
-        vis2 = [False] * len(vist2);
-        self.dfs2(1, gr2);
-        
-        for i in range(1, n + 1) :
-            if (not vis1[i] and not vis2[i]) :
-                return False;
-                
-        return True;
+            gr2[x] = {}
+        for i in gr2[x]:
+            if not vis2[i]:
+                self.dfs2(i, gr2)
+
+    def is_connected(self, n, vist1, vist2, gr1, gr2):
+        global vis1
+        global vis2
+        vis1 = [False] * len(vist1)
+        self.dfs1(1, gr1)
+        vis2 = [False] * len(vist2)
+        self.dfs2(1, gr2)
+        for i in range(1, n + 1):
+            if not vis1[i] and not vis2[i]:
+                return False
+        return True
 
     def identificar_pontes_tarjan(self):
         num = [0] * self.num_vertices
@@ -340,14 +372,10 @@ class Grafo:
         if not self.grafo_euleriano():
             print("O grafo não é Euleriano ou Semi-Euleriano.")
             return []
-
         grafo_aux = self.criar_copia()
-
         vertice_inicial = self.definir_vertice_inicial()
-
         caminho = []
         atual = vertice_inicial
-
         while grafo_aux.contar_vertices_arestas()[1] > 0:
             proximo = self.selecionar_aresta_valida(grafo_aux, atual)
             if proximo is not None:
@@ -355,39 +383,37 @@ class Grafo:
                 atual = proximo
             else:
                 break
-
         return caminho
 
     def grafo_euleriano(self):
         if not self.grafo_conexo():
             return False
-    
         graus = [len(self.lista_adj.adjacencias[v]) for v in self.lista_adj.adjacencias]
         impares = sum(g % 2 for g in graus)
         return impares in [0, 2]
-    
+
     def criar_copia(self):
         grafo_aux = Grafo(self.num_vertices, self.dirigido, self.nome)
         grafo_aux.lista_adj.adjacencias = {v: list(self.lista_adj.adjacencias[v]) for v in self.lista_adj.adjacencias}
         grafo_aux.edge_list = list(self.edge_list)
+        grafo_aux.vertex_labels = dict(self.vertex_labels)
+        grafo_aux.vertex_weights = dict(self.vertex_weights)
         return grafo_aux
-    
+
     def definir_vertice_inicial(self):
         graus = [len(self.lista_adj.adjacencias[v]) for v in self.lista_adj.adjacencias]
         for v, g in enumerate(graus):
             if g % 2 != 0:
                 return v
         return 0
-    
+
     def selecionar_aresta_valida(self, grafo_aux, atual):
         for vizinho, _ in list(grafo_aux.lista_adj.adjacencias[atual]):
             grafo_aux.remover_aresta(atual, vizinho)
-    
             if not grafo_aux.grafo_conexo():
                 grafo_aux.adicionar_aresta(atual, vizinho)
             else:
                 return vizinho
-    
         return None
 
     def exportar(self, nome_base="grafo", formatos=["graphml", "ppm", "txt"]):
@@ -409,28 +435,28 @@ class Grafo:
             TXTExporter.exportar(self, nome_arquivo)
         else:
             raise ValueError(f"Formato de exportação '{formato}' não suportado")
-    
+
     def exibir_lista_adjacencia(self):
         print("Lista de Adjacência:")
         for vertice, adj in self.lista_adj.adjacencias.items():
-            vertice_exibicao = vertice + 1
-            adj_exibicao = [(v + 1, peso) for v, peso in adj]
+            vertice_exibicao = f"{self.vertex_labels[vertice]} (Peso: {self.vertex_weights[vertice]})"
+            adj_exibicao = [(f"{self.vertex_labels[v]} (Peso: {self.vertex_weights[v]})", peso) for v, peso in adj]
             print(f"{vertice_exibicao}: {adj_exibicao}")
 
     def exibir_matriz_adjacencia(self):
         print("Matriz de Adjacência:")
-        header = "   " + " ".join([f"{i+1:3}" for i in range(self.num_vertices)])
+        header = "      " + " ".join([f"{self.vertex_labels[i]:5}" for i in range(self.num_vertices)])
         print(header)
         for i, row in enumerate(self.matriz_adj.adj_matrix):
-            linha = f"{i+1:3} " + " ".join([f"{val:3}" for val in row])
+            linha = f"{self.vertex_labels[i]:5} " + " ".join([f"{val:5}" for val in row])
             print(linha)
 
     def exibir_matriz_incidencia(self):
         print("Matriz de Incidência:")
-        header = "   " + " ".join([f"{i+1:3}" for i in range(len(self.edge_list))])
+        header = "      " + " ".join([f"{edge['label'] or 'A'+str(idx+1):5}" for idx, edge in enumerate(self.edge_list)])
         print(header)
         for i, row in enumerate(self.matriz_inc.inc_matrix):
-            linha = f"{i+1:3} " + " ".join([f"{val:3}" for val in row])
+            linha = f"{self.vertex_labels[i]:5} " + " ".join([f"{val:5}" for val in row])
             print(linha)
 
     def exibir_representacoes(self):
@@ -439,3 +465,12 @@ class Grafo:
         self.exibir_matriz_adjacencia()
         print()
         self.exibir_matriz_incidencia()
+
+    def exibir_vertices(self):
+        print("Vértices:")
+        for v in range(self.num_vertices):
+            print(f"{v + 1}. {self.vertex_labels[v]} (Peso: {self.vertex_weights[v]})")
+
+    def exportar_completo(self, nome_base="grafo", formatos=["graphml", "ppm", "txt"]):
+        self.exportar(nome_base, formatos)
+        print(f"Grafo '{self.nome}' exportado para os formatos {', '.join(formatos).upper()} no diretório 'dados'.")

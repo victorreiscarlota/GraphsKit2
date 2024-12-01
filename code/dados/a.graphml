@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+    <key id="d0" for="node" attr.name="label" attr.type="string"/>
+    <key id="d1" for="edge" attr.name="weight" attr.type="double"/>
+    <key id="d2" for="edge" attr.name="label" attr.type="string"/>
+  <graph id="G" edgedefault="undirected">
+    <node id="0">
+      <data key="d0">V1</data>
+    </node>
+    <edge id="0" source="0" target="0">
+      <data key="d1">1</data>
+      <data key="d2">a</data>
+    </edge>
+  </graph>
+</graphml>
