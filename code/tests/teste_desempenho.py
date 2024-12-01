@@ -5,11 +5,27 @@ import sys
 import threading
 from grafo import Grafo
 
-def worker_naive(grafo, queue):
+def worker_gerar_grafo(tamanho, result_holder):
+    grafo = gerar_grafo_conectado(tamanho)
+    result_holder['grafo'] = grafo
+
+def mostrar_feedback_grafo(thread_grafo):
+    spinner = ['|', '/', '-', '\\']
+    idx = 0
+    while thread_grafo.is_alive():
+        sys.stdout.write(f'\r{spinner[idx % len(spinner)]} Gerando grafo...')
+        sys.stdout.flush()
+        idx += 1
+        time.sleep(0.1)
+    sys.stdout.write('\r')  # Limpa a linha ao terminar
+
+def worker_naive(grafo_data, queue):
+    grafo = grafo_data['grafo']
     pontes_naive = grafo.identificar_pontes_naive()
     queue.put(pontes_naive)
 
-def worker_tarjan(grafo, queue):
+def worker_tarjan(grafo_data, queue):
+    grafo = grafo_data['grafo']
     pontes_tarjan = grafo.identificar_pontes_tarjan()
     queue.put(pontes_tarjan)
 
@@ -27,11 +43,24 @@ def teste_desempenho():
     tamanhos = [100, 1000, 10000, 100000]
 
     for tamanho in tamanhos:
-        print(f"\Gerando grafo para teste de tamanho {tamanho}...")
+        print(f"\nIniciando teste para tamanho {tamanho}...")
 
-        grafo = gerar_grafo_conectado(tamanho)
+        # Gerar grafo em um thread separado com feedback
+        print(f"Gerando grafo para teste de tamanho {tamanho}...")
+        result_holder = {}
+        thread_grafo = threading.Thread(target=worker_gerar_grafo, args=(tamanho, result_holder))
+        feedback_grafo = threading.Thread(target=mostrar_feedback_grafo, args=(thread_grafo,))
+        inicio_geracao = time.perf_counter()
+        thread_grafo.start()
+        feedback_grafo.start()
+        thread_grafo.join()
+        feedback_grafo.join()
+        fim_geracao = time.perf_counter()
+        tempo_geracao = fim_geracao - inicio_geracao
+        sys.stdout.write('\r')  # Limpa a linha ao terminar
+        grafo = result_holder['grafo']
         num_arestas = grafo.contar_vertices_arestas()[1]
-        print(f"Grafo gerado com {tamanho} vértices e {num_arestas} arestas.")
+        print(f"Grafo gerado com {tamanho} vértices e {num_arestas} arestas em {tempo_geracao:.4f} segundos.")
 
         # Definir o timeout em segundos
         timeout_seconds = 10  # Ajuste conforme necessário
@@ -39,9 +68,12 @@ def teste_desempenho():
         # Iniciar o monitoramento de memória
         tracemalloc.start()
 
+        # Preparar dados do grafo para serialização
+        grafo_data = {'grafo': grafo}
+
         # Teste do método Naive com timeout e feedback
         queue_naive = multiprocessing.Queue()
-        p_naive = multiprocessing.Process(target=worker_naive, args=(grafo, queue_naive))
+        p_naive = multiprocessing.Process(target=worker_naive, args=(grafo_data, queue_naive))
         inicio_naive = time.perf_counter()
         p_naive.start()
 
@@ -75,7 +107,7 @@ def teste_desempenho():
 
         # Teste do método Tarjan com timeout e feedback
         queue_tarjan = multiprocessing.Queue()
-        p_tarjan = multiprocessing.Process(target=worker_tarjan, args=(grafo, queue_tarjan))
+        p_tarjan = multiprocessing.Process(target=worker_tarjan, args=(grafo_data, queue_tarjan))
         inicio_tarjan = time.perf_counter()
         p_tarjan.start()
 
