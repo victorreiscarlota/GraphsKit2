@@ -10,6 +10,4 @@ grafo.adicionar_aresta(3, 0)
 
 grafo.exibir_representacoes()
 
-grafo.exportar_para_graphml("grafo_exemplo.graphml")
-grafo.exportar_para_ppm("grafo_exemplo.ppm")
-grafo.exportar_para_txt("grafo_exemplo.txt")
+grafo.exportar("grafo_exemplo")

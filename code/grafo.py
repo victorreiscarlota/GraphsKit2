@@ -319,14 +319,25 @@ class Grafo:
     
         return None
 
-    def exportar_para_graphml(self, nome_arquivo="grafo.graphml"):
-        GraphMLExporter.exportar(self, nome_arquivo)
+    def exportar(self, nome_base="grafo", formatos=["graphml", "ppm", "txt"]):
+        if isinstance(formatos, str):
+            formatos = [formatos]
+        for formato in formatos:
+            self._exportar_formato(nome_base, formato)
 
-    def exportar_para_ppm(self, nome_arquivo="grafo.ppm"):
-        PPMExporter.exportar(self, nome_arquivo)
-
-    def exportar_para_txt(self, nome_arquivo="grafo.txt"):
-        TXTExporter.exportar(self, nome_arquivo)
+    def _exportar_formato(self, nome_base, formato):
+        formato = formato.lower()
+        if formato == 'graphml':
+            nome_arquivo = f"{nome_base}.graphml"
+            GraphMLExporter.exportar(self, nome_arquivo)
+        elif formato == 'ppm':
+            nome_arquivo = f"{nome_base}.ppm"
+            PPMExporter.exportar(self, nome_arquivo)
+        elif formato == 'txt':
+            nome_arquivo = f"{nome_base}.txt"
+            TXTExporter.exportar(self, nome_arquivo)
+        else:
+            raise ValueError(f"Formato de exportação '{formato}' não suportado")
     
     def exibir_lista_adjacencia(self):
         print("Lista de Adjacência:")
