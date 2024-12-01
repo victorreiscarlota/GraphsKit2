@@ -3,40 +3,42 @@ from utils.gerar_grafos import GeradorGrafos
 from tests.teste_desempenho import teste_desempenho
 from enum import Enum
 
+
 class MainMenuOption(Enum):
-    ANALYZE_GRAPHS = 1
-    CREATE_GRAPH = 2
-    PERFORMANCE_TEST = 3
-    EXIT = 4
+    ANALISAR_GRAFOS = 1
+    CRIAR_GRAFO = 2
+    TESTE_DESEMPENHO = 3
+    SAIR = 4
+
 
 class SubMenuOption(Enum):
-    ADD_EDGE = 1
-    REMOVE_EDGE = 2
-    CHECK_ADJACENCY = 3
-    SHOW_ADJ_LIST = 4
-    SHOW_ADJ_MATRIX = 5
-    SHOW_INC_MATRIX = 6
-    CHECK_CONNECTIVITY = 7
-    IDENTIFY_BRIDGES = 8
-    IDENTIFY_ARTICULATIONS = 9
-    EXPORT_GRAPH = 10
-    EXPORT_PPM = 11
-    NEW_NAIVE_BRIDGES = 12
-    BACK = 13
+    ADICIONAR_ARESTA = 1
+    REMOVER_ARESTA = 2
+    CHECAR_ADJACENCIA = 3
+    EXIBIR_LISTA_ADJ = 4
+    EXIBIR_MATRIZ_ADJ = 5
+    EXIBIR_MATRIZ_INC = 6
+    VERIFICAR_CONECTIVIDADE = 7
+    IDENTIFICAR_PONTES = 8
+    IDENTIFICAR_ARTICULACOES = 9
+    EXPORTAR_GRAFO = 10
+    EXPORTAR_PPM = 11
+    NOVO_METODO_PONTES = 12
+    VOLTAR = 13
 
 
 class Menu:
     @staticmethod
     def iniciar():
         main_menu_actions = {
-            MainMenuOption.ANALYZE_GRAPHS: Menu.analyze_graphs,
-            MainMenuOption.CREATE_GRAPH: Menu.create_graph,
-            MainMenuOption.PERFORMANCE_TEST: Menu.performance_test,
-            MainMenuOption.EXIT: Menu.exit_program
+            MainMenuOption.ANALISAR_GRAFOS: Menu.analisar_grafos,
+            MainMenuOption.CRIAR_GRAFO: Menu.criar_grafo,
+            MainMenuOption.TESTE_DESEMPENHO: Menu.teste_desempenho,
+            MainMenuOption.SAIR: Menu.sair_programa
         }
 
         while True:
-            Menu.display_main_menu()
+            Menu.exibir_menu_principal()
             try:
                 opcao = int(input("Escolha uma opção: "))
                 option = MainMenuOption(opcao)
@@ -51,17 +53,15 @@ class Menu:
                 print("Opção inválida, tente novamente.")
 
     @staticmethod
-    def display_main_menu():
-        print("\nEscolha as opções abaixo:")
+    def exibir_menu_principal():
+        print("\nEscolha uma das opções abaixo:")
         print("1. Analisar Grafos Prontos")
         print("2. Criar Grafo Manualmente")
         print("3. Realizar Teste de Desempenho")
         print("4. Sair")
-        # for option in MainMenuOption:
-        #     print(f"{option.value}. {option.name.replace('_', ' ').title()}")
 
     @staticmethod
-    def analyze_graphs():
+    def analisar_grafos():
         grafos_prontos = GeradorGrafos.gerar_grafos_prontos()
         for grafo in grafos_prontos:
             print(f"\n{grafo.nome}:")
@@ -70,8 +70,8 @@ class Menu:
             print(f"Arestas: {grafo.contar_vertices_arestas()[1]}")
             pontes_naive = grafo.identificar_pontes_naive()
             pontes_tarjan = grafo.identificar_pontes_tarjan()
-            print("Pontes (Naive):", [(u + 1, v + 1) for u, v in pontes_naive])
-            print("Pontes (Tarjan):", [(u + 1, v + 1) for u, v in pontes_tarjan])
+            print("Pontes (Método Simples):", [(u + 1, v + 1) for u, v in pontes_naive])
+            print("Pontes (Método Tarjan):", [(u + 1, v + 1) for u, v in pontes_tarjan])
             articulacoes = grafo.identificar_articulacoes()
             print("Articulações:", [v + 1 for v in articulacoes])
             if grafo.dirigido:
@@ -84,7 +84,7 @@ class Menu:
             print(f"Grafo '{grafo.nome}' exportado para os formatos GRAPHML, PPM e TXT no diretório 'dados'.")
 
     @staticmethod
-    def create_graph():
+    def criar_grafo():
         try:
             num_vertices = int(input("Digite o número de vértices: "))
             if num_vertices <= 0:
@@ -101,30 +101,30 @@ class Menu:
         grafo = Grafo(num_vertices, dirigido, nome=nome_grafo)
 
         sub_menu_actions = {
-            SubMenuOption.ADD_EDGE: Menu.add_edge,
-            SubMenuOption.REMOVE_EDGE: Menu.remove_edge,
-            SubMenuOption.CHECK_ADJACENCY: Menu.check_adjacency,
-            SubMenuOption.SHOW_ADJ_LIST: Menu.show_adj_list,
-            SubMenuOption.SHOW_ADJ_MATRIX: Menu.show_adj_matrix,
-            SubMenuOption.SHOW_INC_MATRIX: Menu.show_inc_matrix,
-            SubMenuOption.CHECK_CONNECTIVITY: Menu.check_connectivity,
-            SubMenuOption.IDENTIFY_BRIDGES: Menu.identify_bridges,
-            SubMenuOption.IDENTIFY_ARTICULATIONS: Menu.identify_articulations,
-            SubMenuOption.EXPORT_GRAPH: Menu.export_graph,
-            SubMenuOption.EXPORT_PPM: Menu.export_ppm,
-            SubMenuOption.NEW_NAIVE_BRIDGES: Menu.new_naive_bridges,
-            SubMenuOption.BACK: Menu.back_to_main_menu
+            SubMenuOption.ADICIONAR_ARESTA: Menu.adicionar_aresta,
+            SubMenuOption.REMOVER_ARESTA: Menu.remover_aresta,
+            SubMenuOption.CHECAR_ADJACENCIA: Menu.checar_adjacencia,
+            SubMenuOption.EXIBIR_LISTA_ADJ: Menu.exibir_lista_adj,
+            SubMenuOption.EXIBIR_MATRIZ_ADJ: Menu.exibir_matriz_adj,
+            SubMenuOption.EXIBIR_MATRIZ_INC: Menu.exibir_matriz_inc,
+            SubMenuOption.VERIFICAR_CONECTIVIDADE: Menu.verificar_conectividade,
+            SubMenuOption.IDENTIFICAR_PONTES: Menu.identificar_pontes,
+            SubMenuOption.IDENTIFICAR_ARTICULACOES: Menu.identificar_articulacoes,
+            SubMenuOption.EXPORTAR_GRAFO: Menu.exportar_grafo,
+            SubMenuOption.EXPORTAR_PPM: Menu.exportar_ppm,
+            SubMenuOption.NOVO_METODO_PONTES: Menu.novo_metodo_pontes,
+            SubMenuOption.VOLTAR: Menu.voltar_menu_principal
         }
 
         while True:
-            Menu.display_sub_menu()
+            Menu.exibir_menu_secundario()
             try:
                 escolha = int(input("Escolha uma opção: "))
                 option = SubMenuOption(escolha)
                 action = sub_menu_actions.get(option)
                 if action:
                     result = action(grafo)
-                    if result == 'back':
+                    if result == 'voltar':
                         export_nome = grafo.nome.replace(" ", "_")
                         grafo.exportar(export_nome)
                         print(f"Grafo '{grafo.nome}' exportado automaticamente após a criação.")
@@ -137,22 +137,33 @@ class Menu:
                 print("Opção inválida, tente novamente.")
 
     @staticmethod
-    def display_sub_menu():
+    def exibir_menu_secundario():
         print("\nSubmenu:")
-        for option in SubMenuOption:
-            print(f"{option.value}. {option.name.replace('_', ' ').title()}")
+        print("1. Adicionar Aresta")
+        print("2. Remover Aresta")
+        print("3. Verificar Adjacência")
+        print("4. Exibir Lista de Adjacência")
+        print("5. Exibir Matriz de Adjacência")
+        print("6. Exibir Matriz de Incidência")
+        print("7. Verificar Conectividade")
+        print("8. Identificar Pontes")
+        print("9. Identificar Articulações")
+        print("10. Exportar Grafo")
+        print("11. Exportar Grafo como PPM")
+        print("12. Identificar Pontes (Método Alternativo)")
+        print("13. Voltar ao Menu Principal")
 
     @staticmethod
-    def performance_test():
+    def teste_desempenho():
         teste_desempenho()
 
     @staticmethod
-    def exit_program():
+    def sair_programa():
         print("Saindo do programa. Até logo!")
         exit()
 
     @staticmethod
-    def add_edge(grafo):
+    def adicionar_aresta(grafo):
         try:
             u = int(input(f"Digite o vértice u (1 a {grafo.num_vertices}): ")) - 1
             v = int(input(f"Digite o vértice v (1 a {grafo.num_vertices}): ")) - 1
@@ -168,7 +179,7 @@ class Menu:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
     @staticmethod
-    def remove_edge(grafo):
+    def remover_aresta(grafo):
         try:
             u = int(input(f"Digite o vértice u (1 a {grafo.num_vertices}): ")) - 1
             v = int(input(f"Digite o vértice v (1 a {grafo.num_vertices}): ")) - 1
@@ -181,7 +192,7 @@ class Menu:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
     @staticmethod
-    def check_adjacency(grafo):
+    def checar_adjacencia(grafo):
         try:
             u = int(input(f"Digite o vértice u (1 a {grafo.num_vertices}): ")) - 1
             v = int(input(f"Digite o vértice v (1 a {grafo.num_vertices}): ")) - 1
@@ -196,19 +207,19 @@ class Menu:
             print("Entrada inválida. Por favor, digite números inteiros.")
 
     @staticmethod
-    def show_adj_list(grafo):
+    def exibir_lista_adj(grafo):
         grafo.exibir_lista_adjacencia()
 
     @staticmethod
-    def show_adj_matrix(grafo):
+    def exibir_matriz_adj(grafo):
         grafo.exibir_matriz_adjacencia()
 
     @staticmethod
-    def show_inc_matrix(grafo):
+    def exibir_matriz_inc(grafo):
         grafo.exibir_matriz_incidencia()
 
     @staticmethod
-    def check_connectivity(grafo):
+    def verificar_conectividade(grafo):
         if grafo.dirigido:
             print("Fortemente Conexo:", grafo.grafo_fortemente_conexo())
             print("Conexo Fraco:", grafo.grafo_conexo_fraco())
@@ -217,21 +228,21 @@ class Menu:
             print("Conexo:", grafo.grafo_conexo())
 
     @staticmethod
-    def identify_bridges(grafo):
+    def identificar_pontes(grafo):
         pontes_naive = grafo.identificar_pontes_naive()
         pontes_tarjan = grafo.identificar_pontes_tarjan()
         pontes_naive_exib = [(u + 1, v + 1) for u, v in pontes_naive]
         pontes_tarjan_exib = [(u + 1, v + 1) for u, v in pontes_tarjan]
-        print("Pontes (Naive):", pontes_naive_exib)
-        print("Pontes (Tarjan):", pontes_tarjan_exib)
+        print("Pontes (Método Simples):", pontes_naive_exib)
+        print("Pontes (Método Tarjan):", pontes_tarjan_exib)
 
     @staticmethod
-    def identify_articulations(grafo):
+    def identificar_articulacoes(grafo):
         articulacoes = [v + 1 for v in grafo.identificar_articulacoes()]
         print("Articulações:", articulacoes)
 
     @staticmethod
-    def export_graph(grafo):
+    def exportar_grafo(grafo):
         nome = input("Digite o nome base dos arquivos (sem extensão): ").strip()
         if not nome:
             nome = grafo.nome.replace(" ", "_")
@@ -239,7 +250,7 @@ class Menu:
         print("Exportação concluída.")
 
     @staticmethod
-    def export_ppm(grafo):
+    def exportar_ppm(grafo):
         nome_ppm = input("Digite o nome do arquivo PPM (com extensão .ppm): ").strip()
         if not nome_ppm.endswith('.ppm'):
             print("Erro: O nome do arquivo deve terminar com '.ppm'.")
@@ -248,11 +259,11 @@ class Menu:
         print(f"Grafo exportado como {nome_ppm}.")
 
     @staticmethod
-    def new_naive_bridges(grafo):
+    def novo_metodo_pontes(grafo):
         pontes_naive = grafo.identificar_pontes_naive_novo()
         pontes_naive_exib = [(u + 1, v + 1) for u, v in pontes_naive]
-        print("Pontes (Naive):", pontes_naive_exib)
+        print("Pontes (Método Alternativo):", pontes_naive_exib)
 
     @staticmethod
-    def back_to_main_menu(grafo):
-        return 'back'
+    def voltar_menu_principal(grafo):
+        return 'voltar'
