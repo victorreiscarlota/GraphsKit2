@@ -232,6 +232,32 @@ class Grafo:
                     if low[v] > num[parent[v]]:
                         pontes.append((parent[v], v))
 
+    def identificar_pontes_tarjan_novo(self):
+        num = [0] * self.num_vertices
+        low = [0] * self.num_vertices
+        self.tempo = 1
+        pontes = []
+        visited = [False] * self.num_vertices
+        parent = [-1] * self.num_vertices
+        for u in range(self.num_vertices):
+            if not visited[u]:
+                self._tarjan_novo_dfs(u, visited, parent, num, low, pontes)
+        return pontes
+
+    def _tarjan_novo_dfs(self, u, visited, parent, num, low, pontes):
+        visited[u] = True
+        num[u] = low[u] = self.tempo
+        self.tempo += 1
+        for v, _ in self.lista_adj.adjacencias[u]:
+            if not visited[v]:
+                parent[v] = u
+                self._tarjan_novo_dfs(v, visited, parent, num, low, pontes)
+                low[u] = min(low[u], low[v])
+                if low[v] > num[u]:
+                    pontes.append((u, v))
+            elif v != parent[u]:
+                low[u] = min(low[u], num[v])
+
     def identificar_articulacoes(self):
         num = [0] * self.num_vertices
         low = [0] * self.num_vertices

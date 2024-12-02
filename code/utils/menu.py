@@ -27,7 +27,8 @@ class SubMenuOption(Enum):
     EXPORTAR_GRAFO = 15
     EXPORTAR_PPM = 16
     NOVO_METODO_PONTES = 17
-    VOLTAR = 18
+    NOVO_METODO_PONTES_ALTERNATIVO = 18
+    VOLTAR = 19
 
 class Menu:
     @staticmethod
@@ -130,6 +131,7 @@ class Menu:
             SubMenuOption.EXPORTAR_GRAFO: Menu.exportar_grafo,
             SubMenuOption.EXPORTAR_PPM: Menu.exportar_ppm,
             SubMenuOption.NOVO_METODO_PONTES: Menu.novo_metodo_pontes,
+            SubMenuOption.NOVO_METODO_PONTES_ALTERNATIVO: Menu.novo_metodo_pontes_tarjan,
             SubMenuOption.VOLTAR: Menu.voltar_menu_principal
         }
 
@@ -172,7 +174,8 @@ class Menu:
         print("15. Exportar Grafo")
         print("16. Exportar Grafo como PPM")
         print("17. Identificar Pontes (Método Alternativo)")
-        print("18. Voltar ao Menu Principal")
+        print("18. Identificar Pontes (Método Alternativo Tarjan)")
+        print("19. Voltar ao Menu Principal")
 
     @staticmethod
     def teste_desempenho():
@@ -345,6 +348,12 @@ class Menu:
         pontes_naive = grafo.identificar_pontes_naive_novo()
         pontes_naive_exib = [(u + 1, v + 1) for u, v in pontes_naive]
         print("Pontes (Método Alternativo):", pontes_naive_exib)
+    
+    @staticmethod
+    def novo_metodo_pontes_tarjan(grafo):
+        pontes_tarjan = grafo.identificar_pontes_tarjan_novo()
+        pontes_tarjan_exib = [(u + 1, v + 1) for u, v in pontes_tarjan]
+        print("Pontes (Método Alternativo Tarjan):", pontes_tarjan_exib)        
 
     @staticmethod
     def voltar_menu_principal(grafo):
