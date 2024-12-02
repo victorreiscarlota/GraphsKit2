@@ -1,5 +1,3 @@
-# grafo_lib/representacoes/matriz_adjacencia.py
-
 class MatrizAdjacencia:
     def __init__(self, num_vertices, dirigido=False):
         self.num_vertices = num_vertices

@@ -21,3 +21,5 @@ class ListaAdjacencia:
     def exibir(self):
         for vertice, adj in self.adjacencias.items():
             print(f"{vertice}: {adj}")
+
+

@@ -1,5 +1,3 @@
-# grafo_lib/representacoes/matriz_incidencia.py
-
 class MatrizIncidencia:
     def __init__(self, num_vertices, dirigido=False):
         self.num_vertices = num_vertices
