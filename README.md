@@ -1,4 +1,5 @@
 # GraphsKit - Manipulação de grafos
+![gif exemplo](docs/grafo.gif)
 
 > Trabalho prático da disciplina Teoria dos Grafos e Computabilidade, PUC Minas, 2024.
 
