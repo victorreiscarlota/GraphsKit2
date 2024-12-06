@@ -134,12 +134,13 @@ class Grafo:
     def identificar_pontes_naive_novo(self):
         pontes = []
         N = self.num_vertices + 1
-        gr1 = {}
-        gr2 = {}
         vist1 = [0] * N
         vist2 = [0] * N
 
         for edge in self.edge_list:
+            gr1 = {}
+            gr2 = {}
+
             for edge in self.edge_list:
                 self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
 
