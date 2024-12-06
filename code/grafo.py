@@ -140,13 +140,14 @@ class Grafo:
         vist2 = [0] * N
 
         for edge in self.edge_list:
-            self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+            for edge in self.edge_list:
+                self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
 
-        for edge in self.edge_list:
             self.remove_edge_naive(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+
             if not self.is_connected(N - 1, vist1, vist2, gr1, gr2):
-                pontes.append((edge['u'], edge['v']))
-            self.add_edge(edge['u'] + 1, edge['v'] + 1, gr1, gr2)
+                if (edge['u'], edge['v']) not in pontes:
+                    pontes.append((edge['u'], edge['v']))
 
         return pontes
 
