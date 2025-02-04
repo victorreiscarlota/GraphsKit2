@@ -120,8 +120,6 @@ grafo.exportar_graphml('grafo', ["graphml", "txt"])
 - `nome_base` (_string, opcional_): Nome base do arquivo de saída. Padrão: `'grafo'`.
 - `tipos` (_list, opcional_): Lista de tipos de arquivo para exportar. Padrão: `['graphml', 'ppm', 'txt']`.
 
-## 📌 Conclusão
+## 📌 Contribuir
 
-A biblioteca GraphsKit oferece uma base sólida para a manipulação de grafos em Python, especialmente para fins educacionais. Com as melhorias sugeridas e uma documentação completa, ela pode se tornar uma ferramenta ainda mais poderosa e útil para estudantes e entusiastas de teoria dos grafos.
-
-Se tiver mais dúvidas ou precisar de assistência adicional, estou à disposição para ajudar!
+Sinta-se a vontade para forkar o repositório e contribuir com o projeto.
