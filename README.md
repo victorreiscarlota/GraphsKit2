@@ -122,4 +122,4 @@ grafo.exportar_graphml('grafo', ["graphml", "txt"])
 
 ## 📌 Contribuir
 
-Sinta-se a vontade para forkar o repositório e contribuir com o projeto.
+Sinta-se à vontade para realizar um fork do repositório e contribuir com o desenvolvimento do projeto.
